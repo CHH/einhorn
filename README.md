@@ -38,8 +38,11 @@ use Einhorn\Worker;
 $client = Worker::client();
 ```
 
-The `client` method supports various discovery strategies for
-discovering the master process' control socket.
+The `client` method takes the discovery method for the control socket as
+first argument and an optional second argument, which can be used by the
+specific discovery strategy.
+
+Following discovery strategies are supported out-of-the-box:
 
  * `DISCOVER_ENV`: Looks for an environment variable named
    `EINHORN_SOCK_PATH` which contains the path to the master's
