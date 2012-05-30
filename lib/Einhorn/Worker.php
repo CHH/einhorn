@@ -26,7 +26,7 @@ class Worker
     {
         switch ($discovery) {
             case self::DISCOVER_ENV:
-                $path = $_SERVER["EINHORN_SOCKET_PATH"];
+                $path = $_SERVER["EINHORN_SOCK_PATH"];
                 $client = Client::forPath($path);
                 break;
             case self::DISCOVER_FD:
@@ -44,16 +44,15 @@ class Worker
         return $client;
     }
 
-    # Public: Opens the connection to the FD passed to the script
-    # by Einhorn when in socket server mode.
-    #
-    # fd   - File descriptor as number (default: $_SERVER['argv'][1]).
-    # mode - Mode passed to `fopen` (default: 'rb').
-    #
-    # Returns a Stream.
-    static function open($fd = null, $mode = "rb")
+    # Returns the socket on which the server was started.
+    static function socket($fd = null, $mode = "rb")
     {
         if (null === $fd) {
+            if (!isset($_SERVER['argv'][1])) {
+                throw new InvalidArgumentException("No file descriptor was given as argument."
+                    . " Check that you gave Einhorn an address to listen on.");
+            }
+
             $fd = $_SERVER['argv'][1];
         }
 

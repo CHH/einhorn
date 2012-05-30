@@ -18,6 +18,11 @@ class Client
         return new static($socket);
     }
 
+    # Creates a Client from a File descriptor number.
+    #
+    # fd - File Descriptor number.
+    #
+    # Returns a Client instance.
     static function forFd($fd)
     {
         $socket = fopen("php://fd/$fd", "rb");
