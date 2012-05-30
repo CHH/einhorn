@@ -54,6 +54,42 @@ Following discovery strategies are supported out-of-the-box:
    Socket. Useful when opening an connection the control socket from
    outside of a worker script for monitoring etc.
 
+Example:
+
+```php
+<?php
+
+use Einhorn\Worker;
+
+$client = Worker::client(Worker::DISCOVER_FD);
+$client->ack();
+```
+
+The client also features a `command` method to send arbitary commands to
+the master process.
+
+    Client::command(array $command, $awaitResponse = true)
+
+The `command` argument is an array which contains at least an `command`
+key which contains the name of the command to invoke on the master.
+
+Make sure you set `awaitResponse` to false for commands which _do not_
+return a response (e.g. `worker:ack`). Otherwise this call hangs forever because it waits on
+a response from the master process.
+
+Example:
+
+```php
+<?php
+
+user Einhorn\Worker;
+
+$client = Worker::client();
+
+# manually make an ACK
+$client->command(array("command" => "worker:ack", "pid" => getmypid()), false);
+```
+
 ### Manual ACK
 
 The client features a `ack` method which sends an `worker:ack` command with the
