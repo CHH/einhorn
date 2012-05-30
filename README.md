@@ -31,6 +31,8 @@ Process. The simplest way to retrieve a client is through the worker's
 `client` method.
 
 ```php
+<?php
+
 use Einhorn\Worker;
 
 $client = Worker::client();
