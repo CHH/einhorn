@@ -15,7 +15,7 @@ class Worker
     #
     # discovery - Discovery strategy for the connection method to the Einhorn Master (default: DISCOVER_ENV).
     #             DISCOVER_ENV    - Connects to the Unix Socket in
-    #                               `EINHORN_SOCKET_PATH`.
+    #                               `EINHORN_SOCK_PATH`.
     #             DISCOVER_FD     - Opens the file descriptor in `EINHORN_FD`.
     #             DISCOVER_DIRECT - Connects to the Unix Socket passed 
     #                               as second argument.

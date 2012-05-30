@@ -4,8 +4,7 @@ declare(ticks = 1);
 
 require(dirname(__DIR__) . "/vendor/autoload.php");
 
-use Einhorn\Worker,
-    Einhorn\Socket;
+use Einhorn\Worker;
 
 if (!isset($_SERVER['argv'][1])) {
     fwrite(STDERR, "Make sure you've run Einhorn with a socket spec.\n");
@@ -25,6 +24,7 @@ $client->ack();
 
 for (;;) {
     pcntl_signal_dispatch();
+
     $accepted = @stream_socket_accept($socket);
 
     if (false === $accepted) {
