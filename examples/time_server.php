@@ -7,6 +7,11 @@ require(dirname(__DIR__) . "/vendor/autoload.php");
 use Einhorn\Worker,
     Einhorn\Socket;
 
+if (!isset($_SERVER['argv'][1])) {
+    fwrite(STDERR, "Make sure you've run Einhorn with a socket spec.\n");
+    exit(1);
+}
+
 Worker::gracefulShutdown(function() {
     printf("Goodbye from %d\n", getmypid());
     exit(0);
