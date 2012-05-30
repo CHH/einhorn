@@ -1,0 +1,21 @@
+{
+    "name": "chh/einhorn",
+    "description": "Library for communicating with an Einhorn parent process.",
+    "authors": [
+        {
+            "name": "Christoph Hochstrasser",
+            "email": "christoph.hochstrasser@gmail.com"
+        }
+    ],
+    "keywords": [
+        "server", "socket"
+    ],
+    "require": {
+        "php": ">=5.3.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "Einhorn": "lib/"
+        }
+    }
+}
