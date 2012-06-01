@@ -68,14 +68,13 @@ $client->ack();
 The client also features a `command` method to send arbitary commands to
 the master process.
 
-    Client::command(array $command, $awaitResponse = true)
+    Client::command(array $command)
 
 The `command` argument is an array which contains at least an `command`
 key which contains the name of the command to invoke on the master.
 
-Make sure you set `awaitResponse` to false for commands which _do not_
-return a response (e.g. `worker:ack`). Otherwise this call hangs forever because it waits on
-a response from the master process.
+For commands which return a response, the `recv` method should be called
+after sending the command.
 
 Example:
 
@@ -86,8 +85,9 @@ user Einhorn\Worker;
 
 $client = Worker::client();
 
-# manually make an ACK
-$client->command(array("command" => "worker:ack", "pid" => getmypid()), false);
+$client->command(array("command" => "state"));
+
+$state = $client->recv();
 ```
 
 ### Manual ACK

@@ -58,22 +58,20 @@ class Client
             "pid" => $pid
         );
 
-        $this->command($req, false);
+        $this->command($req);
     }
 
-    # Sends a command to the Einhorn Master.
+    # Sends a command to the Einhorn Master. For commands which return
+    # a response (e.g. "state") you must call `recv()` afterwards to get
+    # the message.
     #
-    # command       - An array describing the command and its arguments.
-    # awaitResponse - Wait for an incoming response after the command
-    #                 was sent. Returns the decoded JSON.
+    # command - An array describing the command and its arguments.
     #
     # Returns Nothing or the decoded Response as Array.
-    function command($command, $awaitResponse = true)
+    function command($command)
     {
         $req = json_encode($command) . "\n";
         $this->write($req);
-
-        if ($awaitResponse) return $this->recv();
     }
 
     # Writes bytes to the Einhorn Master.
@@ -86,7 +84,8 @@ class Client
         return fwrite($this->socket, $data);
     }
 
-    # Reads a response message from the Einhorn Master.
+    # Reads a response message from the Einhorn Master. Note: This blocks until
+    # a message is available!
     #
     # Returns the message as Array.
     function recv()
