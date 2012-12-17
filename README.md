@@ -120,12 +120,26 @@ Example:
 
 use Einhorn\Worker;
 
-# Uses $argv[1] as FD number.
+# Returns the first socket found in `EINHORN_FDS` environment variable
 $socket = Worker::socket();
+
+# Returns all sockets bound via the -b flag
+$sockets = Worker::sockets();
 
 # When the FD number is passed by other means:
 $socket = Worker::socket($fd);
 ```
+
+## Changelog
+
+### v0.4.0
+
+* Added `Worker::sockets()` which returns an array of streams, created
+  from all file descriptor numbers in `EINHORN_FDS`.
+* Use `EINHORN_SOCK_FD` instead of `EINHORN_FD` to discover the file
+  descriptor number of the control socket when the `-g` flag is passed
+  to Einhorn and the `DISCOVER_FD` strategy is used to find the control
+  process.
 
 ## License
 

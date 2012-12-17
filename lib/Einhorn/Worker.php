@@ -30,7 +30,7 @@ class Worker
                 $client = Client::forPath($path);
                 break;
             case self::DISCOVER_FD:
-                $fd = $_SERVER["EINHORN_FD"];
+                $fd = $_SERVER["EINHORN_SOCK_FD"];
                 $client = Client::forFd($fd);
                 break;
             case self::DISCOVER_DIRECT:
@@ -44,19 +44,45 @@ class Worker
         return $client;
     }
 
-    # Returns the socket on which the server was started.
+    # Returns the first socket specified by the -b flag as a PHP stream.
+    #
+    # fd - Optional file descriptor number to convert to a stream.
+    # mode - Mode string passed to fopen().
+    #
+    # Returns a stream.
     static function socket($fd = null, $mode = "rb")
     {
-        if (null === $fd) {
-            if (!isset($_SERVER['argv'][1])) {
-                throw new InvalidArgumentException("No file descriptor was given as argument."
-                    . " Check that you gave Einhorn an address to listen on.");
+        if ($fd === null) {
+            $fds = static::sockets($mode);
+
+            if (!$fds or !is_array($fds)) {
+                throw new \UnexpectedValueException(sprintf(
+                    'No open sockets were found. Check that you have started
+                    Einhorn with the -b flag (EINHORN_FDS=%s)', $_SERVER['EINHORN_FDS']
+                ));
             }
 
-            $fd = $_SERVER['argv'][1];
+            return $fds[0];
         }
 
         return fopen("php://fd/$fd", $mode);
+    }
+
+    # Returns a list of all bound sockets passed by the -b flag to Einhorn.
+    #
+    # mode - Mode string passed to fopen()
+    #
+    # Returns an Array
+    static function sockets($mode = 'rb')
+    {
+        $fds = explode(' ', $_SERVER['EINHORN_FDS']);
+
+        return array_map(
+            function($fd) use ($mode) {
+                return fopen("php://fd/$fd", $mode);
+            },
+            $fds
+        );
     }
 
     # Calls the handler when Einhorn is gracefully shutdown.
